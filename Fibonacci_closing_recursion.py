@@ -2,7 +2,7 @@ def caching_fibonacci():
 
     cache = {}
     
-    def fibonacci(n):
+    def fibonacci(n: int):
 
         if n == 0:
             cache.update({0: 0})
