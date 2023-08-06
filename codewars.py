@@ -3,6 +3,10 @@
   12 ==> 21
  513 ==> 531
 2017 ==> 2071"""
+
+import time
+start_time = time.process_time()
+
 from itertools import permutations
 
 def next_bigger(n):
@@ -25,5 +29,9 @@ def next_bigger(n):
     
     return result
 
-n = 2111
+n = 215190
 print(next_bigger(n))
+
+end_time = time.process_time()
+elapsed_time = (end_time - start_time) * 1000
+print(elapsed_time)
