@@ -1,35 +1,29 @@
-import re
+"""Create a function that takes a positive integer and returns the next bigger number that can be formed by rearranging its digits. For example:
 
-def increment_string(string):
+  12 ==> 21
+ 513 ==> 531
+2017 ==> 2071"""
+from itertools import permutations
 
-    if not string:
-        final_string = '1'
-
-    search_result = re.search('\d+', string[::-1])
-    if not search_result:
-        final_string = string + '1'
-    else:
-        reversed_num = search_result.group()
-        last_num = reversed_num[::-1]
-        print(f"last number: {last_num}")
-
-        new_num_int = int(last_num) + 1
-        new_num_str = str(new_num_int)
-
-        str_without_end_num = string[:-len(last_num)]
-
-        num_value = last_num.lstrip('0')
-        first_zeroes = len(last_num) - len(num_value)
-        print(f"first zeroes: {first_zeroes}")
-
-        if len(num_value) == len(new_num_str):
-            final_string = str_without_end_num + '0' * first_zeroes + new_num_str
+def next_bigger(n):
+    
+    num_list = []
+    final_list = []
+    
+    variants = list(permutations(str(n)))
+    for el in variants:
+        num_str = "".join(el)
+        num_list.append(int(num_str))
+    
+    sorted_list = sorted(num_list)
+    for num in sorted_list:
+        if num > n:
+            final_list.append(num)
+            result = final_list[0]
         else:
-            final_string = str_without_end_num + '0' * (first_zeroes - 1) + new_num_str
+            result = -1
+    
+    return result
 
-    return final_string
-
-
-string = 'dubai090'
-print(increment_string(string))
-
+n = 2111
+print(next_bigger(n))
