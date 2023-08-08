@@ -1,40 +1,18 @@
-# import argparse
 
-# parser = argparse.ArgumentParser()
+def first_non_repeating_letter(s):
 
-# parser.add_argument("hello", help="Bot will offer its help")
-# args = parser.parse_args()
+    count = 0
+    s_lower = s.lower()
+    for chr in s_lower:
+        num = 0
+        num = s_lower.count(chr)
+        if num == 1:
+            if s_lower[count] == s[count]:
+                return chr
+            else:
+                return chr.upper()
+        count += 1
+    return ""
 
-# if __name__ == "__main__":
-#     pass
-
-phone_dict = {}
-
-name_number_str = input("Enter name and number (Name, space, number): ")
-name_number_list = name_number_str.split(" ")
-phone_dict.update({name_number_list[0]: name_number_list[1]})
-print(phone_dict)
-
-
-def format_phone_number(func):
-    def wrapper(*args, **kwargs):
-        if len(func(*args, **kwargs)) == 9:  # написав для польских номерів
-            result = "+48" + func(*args, **kwargs)
-        elif len(func(*args, **kwargs)) == 11:
-            result = "+" + func(*args, **kwargs)
-            return result
-
-    return wrapper
-
-
-@format_phone_number
-def sanitize_phone_number(phone):
-    new_phone = (
-        phone.strip()
-        .removeprefix("+")
-        .replace("(", "")
-        .replace(")", "")
-        .replace("-", "")
-        .replace(" ", "")
-    )
-    return new_phone
+s = "sTreSS"
+print(first_non_repeating_letter(s))
