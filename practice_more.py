@@ -1,2 +1,0 @@
-Після додавання контактів метод list_contacts повертає не той результат, очікувалося:
-[{'id': 3, 'name': 'Wylie Pope', 'phone': '(692) 802-2949', 'email': 'est@utquamvel.net', 'favorite': False}, {'id': 4, 'name': 'Cyrus Jackson', 'phone': '(501) 472-5218', 'email': 'nibh@semsempererat.com', 'favorite': False}]
