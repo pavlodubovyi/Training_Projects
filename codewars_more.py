@@ -1,16 +1,19 @@
-from functools import reduce
+class Student:
 
-def factorial(num):
-    return reduce(lambda x, y: x * y, range(1, num + 1))
+    def __init__(self, first_name, last_name, grades=[]):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.grades = grades
+    
+    def add_grade(self, grade):
+        self.grades.append(grade)
+    
+    def get_average(self):
+        return sum(self.grades) / len(self.grades)
 
-def zeros(n):
-    count_zeroes = 0
-    power = 1
-    while 5**power <= n:
-        count_zeroes += n // (5**power)
-        power += 1
-    return count_zeroes
-
-n = 1000
-print(f"zeroes expected: {zeros(n)}")
-print(len(str(factorial(n))) - len(str(factorial(n)).rstrip("0")))
+matthewConnorGrades = [44, 53, 27, 60]
+chloeMadisonGrades = [79, 58, 30, 66]
+studentGrades = matthewConnorGrades, chloeMadisonGrades
+matthewConnor = Student('Matthew', 'Connor', matthewConnorGrades)
+chloeMadison = Student('Chloe', 'Madison', chloeMadisonGrades)
+students = matthewConnor, chloeMadison
