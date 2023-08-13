@@ -1,11 +1,7 @@
-class Cube(object):
-    # This cube needs help
-    # Define a constructor which takes one integer, or handles no args
-    
-    def get_side(self):
-        """Return the side of the Cube"""
-        return self.__side
+class Ship:
+    def __init__(self, draft, crew):
+        self.draft = draft
+        self.crew = crew
 
-    def set_side(self, new_side):
-        """Set the value of the Cube's side."""
-        self.__side = new_side
+    def is_worth_it(self):
+        return True if self.draft - self.crew * 1.5 >= 20 else False
