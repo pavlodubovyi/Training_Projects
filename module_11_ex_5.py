@@ -1,47 +1,21 @@
-class Point:
-    def __init__(self, x, y):
-        self.__x = None
-        self.__y = None
-        self.x = x
-        self.y = y
+class Iterable:
+    MAX_VALUE = 10
 
-    @property
-    def x(self):
-        return self.__x
+    def __init__(self):
+        self.current_value = 0
 
-    @x.setter
-    def x(self, x):
-        if (type(x) == int) or (type(x) == float):
-            self.__x = x
-
-    @property
-    def y(self):
-        return self.__y
-
-    @y.setter
-    def y(self, y):
-        if (type(y) == int) or (type(y) == float):
-            self.__y = y
-
-    def __str__(self):
-        return f"Point({self.__x},{self.__y})"
+    def __next__(self):
+        if self.current_value < self.MAX_VALUE:
+            self.current_value += 1
+            return self.current_value
+        raise StopIteration
 
 
-class Vector:
-    def __init__(self, coordinates: Point):
-        self.coordinates = coordinates
+class CustomIterator:
+    def __iter__(self):
+        return Iterable()
 
-    def __setitem__(self, index, value):
-        if index == 0:
-            self.coordinates.x = value
-        if index == 1:
-            self.coordinates.y = value
 
-    def __getitem__(self, index):
-        if index == 0:
-            return self.coordinates.x
-        if index == 1:
-            return self.coordinates.y
-
-    def __str__(self):
-        return f"Vector({self.coordinates.x},{self.coordinates.y})"
+c = CustomIterator()
+for i in c:
+    print(i)
