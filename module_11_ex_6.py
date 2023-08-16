@@ -45,9 +45,46 @@ class Vector:
 
     def __call__(self, value=None):
         if value:
-            return f"({self.coordinates.x * value}, {self.coordinates.y * value})"
-        return f"({self.coordinates.x}, {self.coordinates.y})"
+            self.coordinates.x = self.coordinates.x * value
+            self.coordinates.y = self.coordinates.y * value
+        return self.coordinates.x, self.coordinates.y
 
-vector = Vector(Point(1, 10))
+    def __add__(self, vector):
+        x = self.coordinates.x + vector.coordinates.x
+        y = self.coordinates.y + vector.coordinates.y
+        return Vector(Point(x, y))
 
-print(vector(5))  # (1, 10)
+    def __sub__(self, vector):
+        x = self.coordinates.x - vector.coordinates.x
+        y = self.coordinates.y - vector.coordinates.y
+        return Vector(Point(x, y))
+
+    def __mul__(self, vector):
+        return (
+                self.coordinates.x * vector.coordinates.x
+                + self.coordinates.y * vector.coordinates.y
+        )
+
+    def len(self):
+        return (self.coordinates.x ** 2 + self.coordinates.y ** 2) ** 0.5
+
+    def __str__(self):
+        return f"Vector({self.coordinates.x},{self.coordinates.y})"
+
+    def __eq__(self, vector):
+        
+
+    def __ne__(self, vector):
+        
+
+    def __lt__(self, vector):
+        
+
+    def __gt__(self, vector):
+        
+
+    def __le__(self, vector):
+        
+
+    def __ge__(self, vector):
+        
