@@ -1,18 +1,24 @@
+import pickle
+from time import sleep
+from datetime import datetime
 
-def first_non_repeating_letter(s):
+class RememberAll:
+    def __init__(self, *args) -> None:
+        self.data = list(args)
+        self.saved = None
+        self.restored = None
+    
+    def __getstate__(self) -> object:
+        state = self.__dict__.copy() # якщо __dict__ в __getstate__, він бере всі методи з init
+        state['saved'] = datetime.now()
+        return state
 
-    count = 0
-    s_lower = s.lower()
-    for chr in s_lower:
-        num = 0
-        num = s_lower.count(chr)
-        if num == 1:
-            if s_lower[count] == s[count]:
-                return chr
-            else:
-                return chr.upper()
-        count += 1
-    return ""
-
-s = "sTreSS"
-print(first_non_repeating_letter(s))
+if __name__ == "__main__":
+    print(RememberAll.__dict__)
+    r = RememberAll(1, 2, 3, 4, 5)
+    print(r.data)
+    r_dump = pickle.dumps(r)
+    sleep(2)
+    r_load = pickle.loads(r_dump)
+    print(r.saved, r.restored)
+    print(r_load.saved, r_load.restored)
