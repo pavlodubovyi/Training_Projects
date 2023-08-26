@@ -16,6 +16,7 @@ class Contacts:
         self.filename = filename
         self.contacts = contacts
         self.count_save = 0
+        self.is_unpacking = False
 
     def save_to_file(self):
         with open(self.filename, "wb") as file:
@@ -30,6 +31,10 @@ class Contacts:
         state = self.__dict__.copy()
         state["count_save"] += 1
         return state
+
+    def __setstate__(self, value) -> object:
+        value["is_unpacking"] = True
+        self.__dict__.update(value)
 
 
 contacts = [
@@ -50,13 +55,6 @@ contacts = [
 
 persons = Contacts("user_class.dat", contacts)
 persons.save_to_file()
-first = persons.read_from_file()
-first.save_to_file()
-second = first.read_from_file()
-second.save_to_file()
-third = second.read_from_file()
-
-print(persons.count_save)  # 0
-print(first.count_save)  # 1
-print(second.count_save)  # 2
-print(third.count_save)  # 3
+person_from_file = persons.read_from_file()
+print(persons.is_unpacking)  # False
+print(person_from_file.is_unpacking)  # True
