@@ -1,13 +1,14 @@
-def multiiter(*params):
-    if len(params) == 1:
-        n = *params
-        for i in range(int(params)):
-            yield tuple(i)
-    elif len(params) == 2:
-        for i in [params][0]:
-            for j in [params][1]:
-                yield (i, j)
+import math
 
 
-for item in multiiter(2, 3):
-    print(item)
+def beeramid(bonus, price):
+    if bonus <= 0:
+        print(0)
+    else:
+        cans = bonus // price
+        print(f"Cans: {cans}")
+        levels = math.isqrt(cans) - math.isqrt(can)
+        print(f"Levels: {levels}")
+
+
+beeramid(1500, 2)

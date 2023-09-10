@@ -1,24 +1,10 @@
-import pickle
-from time import sleep
-from datetime import datetime
+from bitarray import bitarray
 
-class RememberAll:
-    def __init__(self, *args) -> None:
-        self.data = list(args)
-        self.saved = None
-        self.restored = None
-    
-    def __getstate__(self) -> object:
-        state = self.__dict__.copy() # якщо __dict__ в __getstate__, він бере всі методи з init
-        state['saved'] = datetime.now()
-        return state
+stri = "0100 1001 0111 0100 0010 0111 0111 0011 0010 0000 0110 0010 0110 0101 0110 0101 0110 1110 0010 0000 0110 0001 0010 0000 0110 0011 0110 1111 0111 0101 0111 0000 0110 1100 0110 0101 0010 0000 0111 0111 0110 0101 0110 0101 0110 1011 0111 0011 0010 1110 0010 1110 0010 1110 0010 0000 0100 1000 0110 1111 0111 0111 0010 0000 0110 0001 0110 0010 0110 1111 0111 0101 0111 0100 0010 0000 0111 0011 0110 1111 0110 1101 0110 0101 0010 0000 0110 0010 0110 1001 0110 1110 0110 0001 0111 0010 0111 1001 0010 0000 0110 0110 0111 0101 0110 1110 0011 1111"
 
-if __name__ == "__main__":
-    print(RememberAll.__dict__)
-    r = RememberAll(1, 2, 3, 4, 5)
-    print(r.data)
-    r_dump = pickle.dumps(r)
-    sleep(2)
-    r_load = pickle.loads(r_dump)
-    print(r.saved, r.restored)
-    print(r_load.saved, r_load.restored)
+
+metatext = bitarray(stri)
+
+ascs = metatext.tobytes().decode('ascii')
+print("The normal string is: ", ascs)
+print(type(ascs))
