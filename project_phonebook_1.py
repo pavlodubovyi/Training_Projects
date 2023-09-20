@@ -13,6 +13,49 @@ class Contact:
         self.email = email
 
 
+class Field:
+    def __init__(self, value) -> None:
+        self._value = None
+        self.value = value
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+
+
+class Phone(Field):
+    @Field.value.setter
+    def value(self, value):
+        if re.match(r"^\+380\d{9}$", value):
+            self._value = value
+        else:
+            raise ValueError(
+                "Невірний формат номеру телефону. Введіть ще раз (+380xxxxxxxxx): "
+            )
+
+
+class Birthday(Field):
+    @Field.value.setter
+    def value(self, value):
+        if re.match(r"^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$", value):
+            self._value = value
+        else:
+            raise ValueError("Введіть день народження контакту ще раз (РРРР-ММ-ДД): ")
+
+
+class Email(Field):
+    @Field.value.setter
+    def value(self, value):
+        if re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", value):
+            self._value = value
+        else:
+            raise ValueError("Невірний формат пошти. Введіть email ще раз: ")
+
+
 class AddressBook:
     def __init__(self):
         self.contacts = []
@@ -50,7 +93,7 @@ class AddressBook:
         else:
             print("Адресна книга порожня.")
 
-    def edit_contact(self, index, name, phone, birthday, email):
+    def edit_contact(self, index, name, phone: Phone, birthday: Birthday, email: Email):
         if 0 <= index < len(self.contacts):
             self.contacts[index].name = name
             self.contacts[index].phone = phone
@@ -79,14 +122,21 @@ class AddressBook:
         return upcoming
 
 
+"""
 # Перевірка правильності формату номеру телефону
 def is_valid_phone(phone):
     return bool(re.match(r"^\+380\d{9}$", phone))
 
 
+# Перевірка правильності формату дня народження (дати)
+def is_valid_birthday(birthday):
+    return bool(re.match(r"^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$", birthday)
+
+
 # Перевірка правильності формату пошти
 def is_valid_email(email):
     return bool(re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email))
+"""
 
 
 # Основна частина програми
@@ -112,18 +162,21 @@ def main():
 
         if choice == "1":
             name = input("Введіть ім'я контакту: ")
+
             phone = input("Введіть номер телефону контакту (+380xxxxxxxxx): ")
-            while not is_valid_phone(phone):
-                print(
-                    "Невірний формат номеру телефону. Введіть ще раз (+380xxxxxxxxx)."
-                )
-                phone = input("Введіть номер телефону контакту: ")
+            # while not is_valid_phone(phone):
+            #     print("Невірний формат номеру телефону. Введіть ще раз (+380xxxxxxxxx): ")
+            #     phone = input("Введіть номер телефону контакту: ")
 
             birthday = input("Введіть день народження контакту (рік-місяць-день): ")
+            # while not is_valid_birthday(birthday):
+            #     print("Невірний формат дня народження!")
+            #     birthday = input("Введіть день народження контакту ще раз (РРРР-ММ-ДД): ")
+
             email = input("Введіть пошту контакту: ")
-            while not is_valid_email(email):
-                print("Невірний формат пошти. Введіть ще раз.")
-                email = input("Введіть пошту контакту: ")
+            # while not is_valid_email(email):
+            #     print("Невірний формат пошти. Введіть ще раз.")
+            #     email = input("Введіть пошту контакту: ")
 
             contact = Contact(name, phone, birthday, email)
             address_book.add_contact(contact)
@@ -142,72 +195,35 @@ def main():
             else:
                 print("Контакти не знайдені.")
 
-            # cпроба продовжити і запропонувати редагування чи видалення
-            choice_after_search = input(
-                "Редагувати - натисніть 'E', Видалити - натисніть 'D': "
-            )
-
-            if choice_after_search.lower() == "e":
-                try:
-                    search_index = (
-                        int(input("Введіть номер контакту для редагування: ")) - 1
-                    )  # Перевіряємо номер з тими, що вивелись в search_results
-                    if 1 <= num <= len(search_results):
-                        name = input("Введіть нове ім'я контакту: ")
-                        phone = input(
-                            "Введіть новий номер телефону контакту (+380xxxxxxxxx): "
-                        )
-                        while not is_valid_phone(phone):
-                            print(
-                                "Невірний формат номеру телефону. Введіть ще раз (+380xxxxxxxxx)."
-                            )
-                            phone = input("Введіть новий номер телефону контакту: ")
-                        birthday = input(
-                            "Введіть новий день народження контакту (рік-місяць-день): "
-                        )
-                        email = input("Введіть нову пошту контакту: ")
-                        while not is_valid_email(email):
-                            print("Невірний формат пошти. Введіть ще раз.")
-                            email = input("Введіть нову пошту контакту: ")
-                        address_book.edit_contact(index, name, phone, birthday, email)
-                    else:
-                        print("Введено неправильний номер")
-                except ValueError:
-                    print("Неправильний формат вводу!")
-
-            elif choice_after_search.lower() == "d":
-                pass
-
         elif choice == "3":
             address_book.display_all_contacts()
 
-        elif choice == "4":
-            try:
-                index = (
-                    int(input("Введіть номер контакту для редагування: ")) - 1
-                )  # якщо контактів багато? Може краще тут реалізувати пошук? Або "Введіть імʼя контакту"?
-                if 0 <= index < len(address_book.contacts):
-                    name = input("Введіть нове ім'я контакту: ")
-                    phone = input(
-                        "Введіть новий номер телефону контакту (+380xxxxxxxxx): "
-                    )
-                    while not is_valid_phone(phone):
-                        print(
-                            "Невірний формат номеру телефону. Введіть ще раз (+380xxxxxxxxx)."
-                        )
-                        phone = input("Введіть новий номер телефону контакту: ")
-                    birthday = input(
-                        "Введіть новий день народження контакту (рік-місяць-день): "
-                    )
-                    email = input("Введіть нову пошту контакту: ")
-                    while not is_valid_email(email):
-                        print("Невірний формат пошти. Введіть ще раз.")
-                        email = input("Введіть нову пошту контакту: ")
-                    address_book.edit_contact(index, name, phone, birthday, email)
-                else:
-                    print("Номер контакту недійсний.")
-            except ValueError:
-                print("Неправильний формат вводу!")
+        # elif choice == "4":
+        #     try:
+        #         index = (int(input("Введіть номер контакту для редагування: ")) - 1)  # це треба покласти аргументом в метод search_contact
+        #         if 0 <= index < len(address_book.contacts):
+        #             name = input("Введіть нове ім'я контакту: ")
+        #             phone = input("Введіть новий номер телефону контакту (+380xxxxxxxxx): ")
+        #             while not is_valid_phone(phone):
+        #                 print("Невірний формат номеру телефону. Введіть ще раз (+380xxxxxxxxx): ")
+        #                 phone = input("Введіть новий номер телефону контакту: ")
+
+        #             birthday = input("Введіть день народження контакту (рік-місяць-день): ")
+        #             while not is_valid_birthday(birthday):
+        #                 print("Невірний формат дня народження!")
+        #                 birthday = input(
+        #                     "Введіть день народження контакту ще раз (РРРР-ММ-ДД): "
+        #                 )
+
+        #             email = input("Введіть нову пошту контакту: ")
+        #             while not is_valid_email(email):
+        #                 print("Невірний формат пошти. Введіть ще раз.")
+        #                 email = input("Введіть нову пошту контакту: ")
+        #             address_book.edit_contact(index, name, phone, birthday, email)
+        #         else:
+        #             print("Номер контакту недійсний.")
+        #     except ValueError:
+        #         print("Неправильний формат вводу!")
 
         elif choice == "5":
             try:
@@ -245,5 +261,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
