@@ -1,65 +1,57 @@
+import argparse
+from pathlib import Path
+from shutil import copyfile
+from threading import Thread
 import logging
-import pathlib
-from queue import Queue
-from threading import Thread, Event
+
+"""
+motlox.py --source -s "Folder name"
+motlox.py --destination -d "Destination folder"
+"""
+
+parser = argparse.ArgumentParser(description="Motloh sorts files and copies them to destination folder")
+parser.add_argument("-s", "--source", help="Source folder", required=True)
+parser.add_argument("-d", "--destination", default="Motloh")
+objects_in_folder = vars(parser.parse_args())  # class object -> dictionary
+source = objects_in_folder.get("source")
+destination = objects_in_folder.get("destination")
+
+folders = []
 
 
-class Writer:
-    def __init__(self, mainfile: str, event: Event):
-        self.data_queue = Queue()
-        self.event = event
-        self.file = open(mainfile, 'x', encoding='utf-8')
+def folder_grabber(path: Path):
+    for el in path.iterdir():
+        if el.is_dir():
+            folders.append(el)
+            folder_grabber(el)
 
-    def __call__(self, *args, **kwargs):
-        while True:
-            if self.data_queue.empty():
-                if self.event.is_set():
-                    logging.info('Done!')
-                    break
-            else:
-                some_file, data = self.data_queue.get()
-                logging.info(f"Writing file {some_file.name}")
-                self.file.write(f"{data}\n")
-
-    def _del__(self):
-        self.file.close()
-
-    def reader(data_queue: Queue):
-        while True:
-            if files.empty():
-                logging.info('Reading completed!')
-                break
-
-            some_file = files.get()
-            logging.info(f"Reading file {some_file.name}")
-            with open(some_file, 'r', encoding='utf-8') as fr:
-                data = []
-                for line in fr:
-                    data.append(line)
-                all_data = ''.join(data)
-                data_queue.put(some_file, all_data)
+def sort_file(path: Path):
+    for el in path.iterdir():
+        if el.is_file():
+            ext = el.suffix
+            new_path = destination_folder / ext
+            try:
+                new_path.mkdir(exist_ok=True, parents=True)
+                copyfile(el, new_path / el.name)
+            except OSError as e:
+                logger.error(e)
 
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format="%(threadName)s %(message)s")
-    event = Event()
-    files = Queue()
+    base_folder = Path(source)
+    destination_folder = Path(destination)
 
-    list_files = pathlib.Path(".").joinpath("files").glob("*.js")
+    folders.append(base_folder)
+    folder_grabber(base_folder)
 
-    [files.put(file) for file in list_files]
-    writer = Writer("main.js", event)
-    if files.empty():
-        logging.info("Nothing here!")
-    else:
-        tw = Thread(target=writer, name="writer")
-        tw.start()
+    threads = []
 
-        threads = []
-        for i in range(3):
-            tr = Thread(target=reader, args=(writer.data_queue,), name=f"reader - {i}")
-            threads.append(tr)
-            tr.start
+    for folder in folders:
+        th = Thread(target=sort_file, args=(folder,))
+        th.start()
+        threads.append(th)
 
-        [th.join() for th in threads]
-        event.set()
+    [th.join() for th in threads]
+    print("Job's done!")
