@@ -1,12 +1,17 @@
-def generate_hashtag(string):
+from math import sqrt
 
-    string_list = string.title().split(" ")
-    hash_string = "#" + "".join(string_list)
-    if len(hash_string) > 141 or len(hash_string) == 1:
-        print("False")
-        return False
-    return hash_string
 
-string = "Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Cat"
-generate_hashtag(string)
-print(len(string))
+def squares_quantity(a: int, b: int) -> int:
+
+    num_list = []
+    result_list = []
+    num = a
+    while num <= b:
+        num_list.append(num)
+        num += 1
+    for x in num_list:
+        if sqrt(x) % 1 == 0:
+            result_list.append(x)
+    return len(result_list)
+
+print(squares_quantity(134, 1713))
