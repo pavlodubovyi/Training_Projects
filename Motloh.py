@@ -5,8 +5,8 @@ from threading import Thread
 import logging
 
 """
-motlox.py --source -s "Folder name"
-motlox.py --destination -d "Destination folder"
+motloh.py --source -s "Folder name"
+motloh.py --destination -d "Destination folder"
 """
 
 parser = argparse.ArgumentParser(description="Motloh sorts files and copies them to destination folder")
