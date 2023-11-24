@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 from shutil import copyfile
-from threading import Thread
+from threading import Thread, Lock
 import logging
 
 """
@@ -18,6 +18,10 @@ destination = objects_in_folder.get("destination")
 
 folders = []
 
+# define logger
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG, format="%(threadName)s %(message)s")
+
 
 def folder_grabber(path: Path):
     for el in path.iterdir():
@@ -25,11 +29,13 @@ def folder_grabber(path: Path):
             folders.append(el)
             folder_grabber(el)
 
+
 def sort_file(path: Path):
     for el in path.iterdir():
         if el.is_file():
             ext = el.suffix
-            new_path = destination_folder / ext
+            new_folder_name = ext.lstrip(".") # removing "." from folder name, so system doesn't see it as hidden
+            new_path = destination_folder / new_folder_name
             try:
                 new_path.mkdir(exist_ok=True, parents=True)
                 copyfile(el, new_path / el.name)
@@ -37,11 +43,13 @@ def sort_file(path: Path):
                 logger.error(e)
 
 
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format="%(threadName)s %(message)s")
     base_folder = Path(source)
-    destination_folder = Path(destination)
+    destination_folder = Path(destination).resolve()
+
+    logger.info(f"Base Folder: {base_folder}")
+    logger.info(f"Destination Folder: {destination_folder}")
 
     folders.append(base_folder)
     folder_grabber(base_folder)
