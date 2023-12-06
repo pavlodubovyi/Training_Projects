@@ -64,12 +64,12 @@ class Vector:
 
     def __mul__(self, vector):
         return (
-                self.coordinates.x * vector.coordinates.x
-                + self.coordinates.y * vector.coordinates.y
+            self.coordinates.x * vector.coordinates.x
+            + self.coordinates.y * vector.coordinates.y
         )
 
     def len(self):
-        return (self.coordinates.x ** 2 + self.coordinates.y ** 2) ** 0.5
+        return (self.coordinates.x**2 + self.coordinates.y**2) ** 0.5
 
     def __str__(self):
         return f"Vector({self.coordinates.x},{self.coordinates.y})"
@@ -104,7 +104,6 @@ class Iterable:
             x = randrange(0, self.max_points + 1)
             y = randrange(0, self.max_points + 1)
             self.vectors.append(Vector(Point(x, y)))
-            
 
     def __next__(self):
         if self.current_index < self.max_vectors:
@@ -113,12 +112,12 @@ class Iterable:
             return current_vector
         raise StopIteration
 
-            
+
 class RandomVectors:
     def __init__(self, max_vectors=10, max_points=50):
         self.max_vectors = max_vectors
         self.max_points = max_points
-        
+
     def __iter__(self):
         return Iterable(self.max_vectors, self.max_points)
 

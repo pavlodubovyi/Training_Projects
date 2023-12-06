@@ -1,9 +1,7 @@
 def caching_fibonacci():
-
     cache = {}
-    
-    def fibonacci(n: int):
 
+    def fibonacci(n: int):
         if n == 0:
             cache.update({0: 0})
         elif n == 1:
@@ -11,12 +9,12 @@ def caching_fibonacci():
         if n in cache:
             return cache[n]
         else:
-            cache[n] = fibonacci(n - 1) + fibonacci (n - 2)
+            cache[n] = fibonacci(n - 1) + fibonacci(n - 2)
         return cache[n]
-    
-    return fibonacci 
+
+    return fibonacci
+
 
 fib = caching_fibonacci()
 num = fib(8)
 print(num)
-

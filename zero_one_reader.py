@@ -5,6 +5,6 @@ stri = "0100 1001 0111 0100 0010 0111 0111 0011 0010 0000 0110 0010 0110 0101 01
 
 metatext = bitarray(stri)
 
-ascs = metatext.tobytes().decode('ascii')
+ascs = metatext.tobytes().decode("ascii")
 print("The normal string is: ", ascs)
 print(type(ascs))

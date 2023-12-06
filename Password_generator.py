@@ -2,9 +2,9 @@
 
 
 # # def get_random_password():
-    
+
 # #     password_list = []  # generate random numbers, corresponding to ASCII table
-    
+
 # #     while len(password_list) < 8:
 # #         random_num = randint(40, 126)
 # #         password_list.append(random_num)
@@ -19,12 +19,12 @@
 # #     random_password = ''.join(password) # convert the list (password) to string
 # #     print(random_password)      # self check
 # #     return random_password
-    
+
 # def is_valid_password(password):
-    
+
 #     if len(password) != 8:
 #         return False
-    
+
 #     has_upper = False
 #     has_lower = False
 #     has_digit = False
@@ -36,18 +36,16 @@
 #             has_lower = True
 #         elif char.isdigit():
 #             has_digit = True
-    
+
 #     return has_upper and has_lower and has_digit
-    
 
 
-# password = "a1EEM+gb" 
+# password = "a1EEM+gb"
 
 from random import randint
 
 
 def get_random_password():
-
     result = ""
     count = 0
     while count < 8:
@@ -75,13 +73,12 @@ def is_valid_password(password):
 
 
 def get_password():
-
     count = 0
     while count < 100:
         password_at_last = get_random_password()
         if is_valid_password(password_at_last):
             return password_at_last
         count += 1
-        
+
 
 get_password()
