@@ -1,6 +1,7 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import pathlib
 import urllib.parse  # для маршрутизації
+import mimetypes
 
 BASE_DIR = pathlib.Path()
 
@@ -17,7 +18,11 @@ class MyHTTPHandler(BaseHTTPRequestHandler):
                 self.send_html('blog.html')
             case _:
                 my_file = BASE_DIR / route.path[1:]
-                print(my_file, f"FILE EXISTS: {my_file.exists()}")
+                # print(my_file, f"FILE EXISTS: {my_file.exists()}")
+                if my_file.exists():
+                    self.send_static(my_file)
+                else:
+                    self.send_html("404.html", 404)
                 self.send_html('404.html', 404)
 
     def send_html(self, filename, status_code=200):
@@ -25,6 +30,21 @@ class MyHTTPHandler(BaseHTTPRequestHandler):
         self.send_header('Content-Type', 'text/html')
         self.end_headers()
         with open(filename, 'rb') as file:  # відправляємо на всі запити тільки 'index.html'
+            self.wfile.write(file.read())
+
+    def send_static(self, filename):
+        absolute_path = BASE_DIR / filename
+        print(f'Absolute Path: {absolute_path}')
+
+        self.send_response(200)
+        mime_type, _ = mimetypes.guess_type(filename)
+
+        if mime_type:  # if we have assets file
+            self.send_header('Content-Type', mime_type)
+        else:  # if we don't know what file type
+            self.send_header('Content-Type', 'text/plain')  # sending plain text
+        self.end_headers()
+        with open(filename, 'rb') as file:  # відправляємо files
             self.wfile.write(file.read())
 
 
