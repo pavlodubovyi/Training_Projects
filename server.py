@@ -1,42 +1,26 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
-
-html = """
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Test html</title>
-</head>
-<body>
-<h1>Hello, Pavlo</h1>
-<div class="test">Test</div>
-</body>
-</html>
-"""
+import socket
 
 
-class MyHTTPHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-Type', 'text/html')
-        self.end_headers()
+def main():
+    host = socket.gethostname()
+    port = 5002
 
-        self.wfile.write(html.encode())
+    server_socket = socket.socket()
+    server_socket.bind((host, port))
+    server_socket.listen()
 
-
-def run(server=HTTPServer, handler=MyHTTPHandler):
-    address = ('', 5001)  # '' = localhost
-    http_server = server(address, handler)  # http server created
-    try:  # http server launched
-        print("Starting http server")
-        http_server.serve_forever()
-    except KeyboardInterrupt:
-        print("Shutting down http server")
-        http_server.server_close()
+    connect, address = server_socket.accept()
+    print(f"Connection from: {address}")
+    while True:
+        in_message = connect.recv(100).decode()
+        if not in_message:
+            break
+        print(f"Message received from client: {in_message}")
+        out_message = input("Enter message to client: ")
+        connect.send(out_message.encode())
+    connect.close()
+    server_socket.close()
 
 
 if __name__ == '__main__':
-    run()
+    main()
