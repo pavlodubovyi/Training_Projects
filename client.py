@@ -8,7 +8,7 @@ def main():
     client_socket = socket.socket()
     client_socket.connect((host, port))
     message = input("Input message to server: ")
-    while message.lower().strip() != 'exit':
+    while message.lower().strip() != "exit":
         client_socket.send(message.encode())
         msg_from_server = client_socket.recv(1024).decode()
         print(f"Received message from server: {msg_from_server}")
@@ -17,5 +17,6 @@ def main():
     client_socket.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    print("Launching client")
     main()
