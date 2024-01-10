@@ -24,8 +24,15 @@ def cpu_bound_operation(counter: int):
 async def main():
     loop = asyncio.get_running_loop()
     task = loop.create_task(ping_worker())
+
     with ProcessPoolExecutor(2) as executor:
-        future = await loop.run_in_executor(executor, cpu_bound_operation, 1000000)
+        futures = [
+            loop.run_in_executor(executor, cpu_bound_operation, counter)
+            for counter in [100_000_000, 120_000_000, 150_000_000]
+        ]
+        res = await asyncio.gather(*futures)
+        task.cancel()
+        return res
 
 
 if __name__ == "__main__":
