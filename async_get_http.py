@@ -43,4 +43,11 @@ async def main():
 
 if __name__ == "__main__":
     print(main_sync())
-    print(asyncio.run(main()))
+
+    outcome: list = asyncio.run(main())
+    new_outcome = []
+    for el in outcome:
+        if isinstance(el, Exception):
+            continue
+        new_outcome.append(el)
+    print(new_outcome)
