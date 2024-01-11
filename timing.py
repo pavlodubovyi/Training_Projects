@@ -4,7 +4,7 @@ from functools import wraps
 
 def async_timer(name: str = None):
     if name:
-        print(f"Your decorator has a name: {name}")
+        print(f"Executing async function: {name}")
 
     def inner(func):
         @wraps(func)
@@ -14,13 +14,15 @@ def async_timer(name: str = None):
                 return await func(*args, **kwargs)
             finally:
                 print(time() - start)
+
         return wrapped
+
     return inner
 
 
 def sync_timer(name: str = None):
     if name:
-        print(f"Your decorator has a name: {name}")
+        print(f"Executing async function: {name}")
 
     def inner(func):
         @wraps(func)
@@ -30,5 +32,7 @@ def sync_timer(name: str = None):
                 return func(*args, **kwargs)
             finally:
                 print(time() - start)
+
         return wrapped
+
     return inner
