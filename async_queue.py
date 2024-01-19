@@ -18,7 +18,7 @@ async def consumer(q: asyncio.Queue):
 async def main():
     queue = asyncio.Queue()
     loop = asyncio.get_running_loop()
-    # loop = asyncio.get_event_loop()
+    # loop = asyncio.get_event_loop() - застарілий з Python 3.10
     consumer_tasks = [loop.create_task(consumer(queue)) for _ in range(3)]
     producer_tasks = [loop.create_task(producer(queue)) for _ in range(3)]
     await asyncio.gather(*producer_tasks)
